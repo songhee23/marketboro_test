@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 public class UserDto {
 
 	private Integer userId;
+	private Integer userPointId;
 	private String account;
 	private Integer point;
 	private UseYn useYn;
@@ -23,8 +24,8 @@ public class UserDto {
 
 	public UserDto(User user) {
 		this.userId = user.getUserId();
+		this.userPointId = getUserPointId();
 		this.account = user.getAccount();
-		this.point = user.getPoint();
 		this.useYn = user.getUseYn();
 		this.regDateTime = user.getRegDateTime();
 		this.modDateTime = user.getModDateTime();
@@ -34,7 +35,7 @@ public class UserDto {
 		return User.builder()
 			.userId(userId)
 			.account(account)
-			.point(point)
+			.userPointId(userPointId)
 			.useYn(useYn)
 			.regDateTime(regDateTime)
 			.modDateTime(modDateTime)

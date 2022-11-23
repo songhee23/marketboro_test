@@ -1,10 +1,9 @@
 package com.marketboro.demo.controller;
 
+import com.marketboro.demo.common.code.PointStatus;
 import com.marketboro.demo.common.wrapper.Result;
-import com.marketboro.demo.dto.UserDto;
 import com.marketboro.demo.dto.UserPointDto;
 import com.marketboro.demo.service.UserPointService;
-import com.marketboro.demo.service.UserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,9 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApiController {
 
 	@Autowired
-	UserService userService;
-
-	@Autowired
 	UserPointService userPointService;
 
 	/**
@@ -36,10 +32,10 @@ public class UserApiController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "userId", value = "회원 아이디 ", required = true),
 	})
-	public Result<UserDto> sumPoint(
-		@RequestParam("userId") String userId) {
-		return Result.<UserDto>builder()
-			.result(null)
+	public Result<UserPointDto> sumPoint(@RequestParam("userId") Integer userId) {
+		UserPointDto userPointDto = userPointService.getUserPointInfo(userId);
+		return Result.<UserPointDto>builder()
+			.result(userPointDto)
 			.build();
 	}
 
@@ -53,9 +49,12 @@ public class UserApiController {
 		@ApiImplicitParam(name = "userId", value = "회원 아이디 ", required = true),
 	})
 	public Result<Page<UserPointDto>> pointList(
-		@RequestParam("userId") String userId) {
+		@RequestParam("userId") Integer userId,
+		@RequestParam("page") int page,
+		@RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+		Page<UserPointDto> userPointDtoList = userPointService.searchUserPoint(userId, size, page);
 		return Result.<Page<UserPointDto>>builder()
-			.result(null)
+			.result(userPointDtoList)
 			.build();
 	}
 
@@ -67,11 +66,13 @@ public class UserApiController {
 	@Operation(summary = "회원별 적립금 적립", description = "회원별 적립금 적립")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "userId", value = "회원 아이디 ", required = true),
+		@ApiImplicitParam(name = "point", value = "적립 포인트", required = true),
 	})
 	public Result<UserPointDto> addPoint(
-		@RequestParam("userId") String userId) {
+		@RequestParam("userId") Integer userId, @RequestParam("point") Integer point) throws Exception {
+		UserPointDto userPointDto = userPointService.setManagerPointStatus(userId, point, PointStatus.ADD);
 		return Result.<UserPointDto>builder()
-			.result(null)
+			.result(userPointDto)
 			.build();
 	}
 
@@ -82,12 +83,14 @@ public class UserApiController {
 	@PostMapping("/use/point")
 	@Operation(summary = "회원별 적립금 사용", description = "회원별 적립금 사용")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "userId", value = "회원 아이디 ", required = true),
+		@ApiImplicitParam(name = "userId", value = "회원 아이디", required = true),
+		@ApiImplicitParam(name = "point", value = "사용 포인트", required = true),
 	})
 	public Result<UserPointDto> usePoint(
-		@RequestParam("userId") String userId) {
+		@RequestParam("userId") Integer userId, @RequestParam("point") Integer point) throws Exception {
+		UserPointDto userPointDto = userPointService.setManagerPointStatus(userId, point, PointStatus.USE);
 		return Result.<UserPointDto>builder()
-			.result(null)
+			.result(userPointDto)
 			.build();
 	}
 }

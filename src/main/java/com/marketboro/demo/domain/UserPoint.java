@@ -1,27 +1,20 @@
 package com.marketboro.demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.marketboro.demo.common.code.PointStatus;
-import com.marketboro.demo.common.code.UseYn;
 import com.marketboro.demo.common.code.converter.PointStatusConverter;
-import com.marketboro.demo.common.code.converter.UseYnConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.catalina.Manager;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 
@@ -31,7 +24,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name = "userpoint")
-public class UserPoint {
+public class UserPoint extends BaseTimeEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,11 +35,15 @@ public class UserPoint {
 	@Column(name = "userId", length = 10)
 	private Integer userId;
 
+	// 사용자 최종 포인트
+	@Column(name = "currentPoint", length = 10)
+	private Integer currentPoint;
+
 	// 포인트
 	@Column(name = "point", length = 10)
 	private Integer point;
 
-	// 포인트 상태(사용-, 추가+)
+	// 포인트 상태(사용-use, 추가-add)
 	@Column(name = "pointStatus", length = 1)
 	@Convert(converter = PointStatusConverter.class)
 	private PointStatus pointStatus;

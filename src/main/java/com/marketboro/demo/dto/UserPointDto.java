@@ -17,6 +17,7 @@ public class UserPointDto {
 	private Integer userPointId;
 	private Integer userId;
 	private Integer point;
+	private Integer currentPoint;
 	private PointStatus pointStatus;
 	private Timestamp regDateTime;
 	private Timestamp modDateTime;
@@ -24,6 +25,7 @@ public class UserPointDto {
 	public UserPointDto(UserPoint userPoint) {
 		this.userPointId = userPoint.getUserPointId();
 		this.userId = userPoint.getUserId();
+		this.currentPoint = userPoint.getCurrentPoint();
 		this.point = userPoint.getPoint();
 		this.pointStatus = userPoint.getPointStatus();
 		this.regDateTime = userPoint.getRegDateTime();
@@ -34,6 +36,7 @@ public class UserPointDto {
 		return UserPoint.builder()
 			.userPointId(userPointId)
 			.userId(userId)
+			.currentPoint(currentPoint)
 			.point(point)
 			.pointStatus(pointStatus)
 			.regDateTime(regDateTime)

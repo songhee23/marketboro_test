@@ -3,7 +3,6 @@ package com.marketboro.demo.common.error;
 import com.marketboro.demo.common.code.ErrorCode;
 import com.marketboro.demo.common.error.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,11 +23,12 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	protected void handleMethodArgumentNotValidException(
+	protected ErrorResponse handleMethodArgumentNotValidException(
 		MethodArgumentNotValidException err) {
 		final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE,
 			err.getBindingResult());
 		log.error("handleMethodArgumentNotValidException", err);
+		return response;
 	}
 
 	/**
@@ -37,10 +37,11 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(org.springframework.validation.BindException.class)
-	protected void handleBindException(BindException err) {
+	protected ErrorResponse handleBindException(BindException err) {
 		final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE,
 			err.getBindingResult());
 		log.error("handleBindException", err);
+		return response;
 	}
 
 	/**
@@ -49,10 +50,11 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	protected void handleMethodArgumentTypeMismatchException(
+	protected ErrorResponse handleMethodArgumentTypeMismatchException(
 		MethodArgumentTypeMismatchException err) {
 		final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_TYPE_VALUE);
 		log.error("handleMethodArgumentTypeMismatchException", err);
+		return response;
 	}
 
 	/**
@@ -61,10 +63,11 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	protected void handleHttpRequestMethodNotSupportedException(
+	protected ErrorResponse handleHttpRequestMethodNotSupportedException(
 		HttpRequestMethodNotSupportedException err) {
 		final ErrorResponse response = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
 		log.error("handleHttpRequestMethodNotSupportedException", err);
+		return response;
 	}
 
 	/**
@@ -73,9 +76,10 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(AccessDeniedException.class)
-	protected void handleAccessDeniedException(AccessDeniedException err) {
+	protected ErrorResponse handleAccessDeniedException(AccessDeniedException err) {
 		final ErrorResponse response = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
 		log.error("handleAccessDeniedException", err);
+		return response;
 	}
 
 	/**
@@ -84,10 +88,11 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(BusinessException.class)
-	protected void handleBusinessException(final BusinessException err) {
+	protected ErrorResponse handleBusinessException(final BusinessException err) {
 		final ErrorCode errorCode = err.getErrorCode();
 		final ErrorResponse response = ErrorResponse.of(errorCode);
 		log.error("BusinessException", err);
+		return response;
 	}
 
 	/**
@@ -96,8 +101,9 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(Exception.class)
-	protected void handleException(Exception err) {
+	protected ErrorResponse handleException(Exception err) {
 		final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
 		log.error("handleEntityNotFoundException", err);
+		return response;
 	}
 }
